@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cloud Web App Deployment</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 2rem; background: #f4f6f8; }
+    .card { background: white; padding: 1.5rem; border-radius: 8px; max-width: 600px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    input, textarea, button { width: 100%; margin-top: 0.5rem; padding: 0.5rem; box-sizing: border-box; }
+    button { background: #0066cc; color: white; border: none; font-weight: bold; cursor: pointer; }
+    .note { background: #eef2f5; margin-top: 0.5rem; padding: 0.5rem; border-left: 4px solid #0066cc; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Cloud Web Application Status: Live</h2>
+    <div id="health">Checking connection...</div>
+    <hr>
+    <h3>Add Deployment Log Entry</h3>
+    <input type="text" id="title" placeholder="Entry Title">
+    <textarea id="content" placeholder="Log details..."></textarea>
+    <button onclick="addNote()">Save Entry</button>
+    <h3>Logged Entries</h3>
+    <div id="notes"></div>
+  </div>
+
+  <script>
+    async function checkHealth() {
+      const res = await fetch('/health');
+      const data = await res.json();
+      document.getElementById('health').innerText = `DB Status: ${data.database || 'DISCONNECTED'}`;
+    }
+
+    async function loadNotes() {
+      const res = await fetch('/api/notes');
+      const notes = await res.json();
+      document.getElementById('notes').innerHTML = notes.map(n => 
+        `<div class="note"><strong>${n.title}</strong><p>${n.content}</p></div>`
+      ).join('');
+    }
+
+    async function addNote() {
+      const title = document.getElementById('title').value;
+      const content = document.getElementById('content').value;
+      await fetch('/api/notes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, content })
+      });
+      document.getElementById('title').value = '';
+      document.getElementById('content').value = '';
+      loadNotes();
+    }
+
+    checkHealth();
+    loadNotes();
+  </script>
+</body>
+</html>
