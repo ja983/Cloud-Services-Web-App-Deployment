@@ -63,3 +63,26 @@ Resource Quotas & Cost Governance Cloud environments can easily accumulate runaw
 Service Quotas / Limits: Hard upper boundaries imposed by cloud providers on resources (e.g., maximum active EC2 instances, database IOPS limits) to prevent accidental resource exhaustion or malicious denial-of-wallet attacks.
 
 Budget Alerts: Automated cost anomaly detection and notification thresholds that alert engineering teams when spending exceeds predicted trajectories.
+
+# Cloud Services & Web Application Deployment
+
+A practical demonstration of deploying a 3-tier Node.js and PostgreSQL web application on cloud compute infrastructure with virtual networking, managed databases, object storage, and security best practices.
+
+## Architecture Diagram
+`Application Code (EC2) <---> Managed Database (RDS PostgreSQL) <---> Object Storage (S3)`
+
+## Features
+- Fully configured VPC with public and private subnets.
+- Managed PostgreSQL integration with restricted Security Group access.
+- Systemd/PM2 process management with Nginx reverse proxy.
+- Health check monitoring endpoint (`/health`).
+
+## Setup & Deployment Steps
+1. Provision cloud networking and database instances.
+2. Clone repository: `git clone https://github.com/<your-username>/cloud-webapp-deployment.git`
+3. Configure environment parameters in `.env`.
+4. Install dependencies and start server: `npm install && pm2 start server.js`
+5. Configure Nginx reverse proxy to forward traffic to port `3000`.
+
+## Health Check
+Access http://<SERVER_IP>/health to view system operational metrics.
